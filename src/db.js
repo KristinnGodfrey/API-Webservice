@@ -18,13 +18,15 @@ const pool = new pg.Pool({ connectionString, ssl });
 
 export async function query(_query, values = []) {
   const client = await pool.connect();
-
+  let result = '';
   try {
-    const result = await client.query(_query, values);
-    return result;
+    result = await client.query(_query, values);
+  } catch (e) {
+    console.info('Error', e);
   } finally {
     await client.release();
   }  
+  return result;
 }
 
 export async function truncateTable(table){
@@ -49,9 +51,8 @@ export let selectAll = async (table) => {
   return result.rows;
 }
 
-export let selectAllWhereId = async (table, id) => {
-  const q = `SELECT * FROM ${table} WHERE ID = ${id};`;
-  // console.log(q);
+export async function selectAllWhereId(table, id) {
+  const q = `SELECT * FROM ${table} WHERE id = $1;`;
   let result = '';
   try {
     result = await query(q, [id]);
@@ -60,3 +61,14 @@ export let selectAllWhereId = async (table, id) => {
   }
   return result.rows;
 }
+
+// export let selectAllWhereId = async (id) => {
+//   const q = `SELECT * FROM series WHERE id = ${id};`;
+//   let result = '';
+//   try {
+//     result = await query(q, [id]);
+//   } catch (error) {
+//     console.info('Error: ', error);
+//   }
+//   return result.rows;
+// }

@@ -12,7 +12,11 @@ router.get('/', async (req, res) => {
 // tv/:id
 router.get('/:id', async (req, res) => {
     let seriesId = req.params.id;
-    console.log(seriesId);
+    try {
+        parseInt(seriesId)
+    } catch (e) {
+        return "Error: id must be int", error;
+    }
     const data = await selectAllWhereId('series', seriesId);
     res.json({data});
 });
