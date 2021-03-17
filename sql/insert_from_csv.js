@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import csv from "csv-parser";
 import fs from "fs";
-import { truncateTable, query } from "../src/db.js";
+import { truncateTable, query, end } from "../src/db.js";
 
 dotenv.config();
 
@@ -27,7 +27,6 @@ async function insertGenres(rows) {
 }
 
 async function insertSeries(row) { 
-
   const q = `
     INSERT INTO
       series
@@ -65,7 +64,6 @@ function parseCsv(file) {
       });
   });
 }
-
 async function main() {
   console.info("Start inserting");
   const file = "./data/series.csv";
@@ -81,6 +79,7 @@ async function main() {
   await insertGenres(rows);
 
   console.info("End inserting");
+  await end();
 }
 
 await main().catch((err) => {

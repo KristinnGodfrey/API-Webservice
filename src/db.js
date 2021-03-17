@@ -59,8 +59,59 @@ export async function selectAllWhereId(table, id) {
   } catch (error) {
     console.info('Error: ', error);
   }
+  return result.rows; 
+}
+
+export async function insertInto(table, row) { 
+  const q = `
+    INSERT INTO
+      ${table}
+      (name, airdate, inProduction, tagline, image, description, language, network, webpage)
+    VALUES
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
+
+  const values = [
+    row.name,
+    row.airDate,
+    row.inProduction,
+    row.tagline,
+    row.image,
+    row.description,
+    row.language,
+    row.network,
+    row.homepage,
+  ];
+  return query(q, values);
+}
+
+export let patchWhereId = async (table, id, row) => {
+  // console.log(row);
+  let q;
+  let result = '';
+  for (const [key, value] of Object.entries(row)) {
+    q = `UPDATE ${table} SET ${key} = '${value}' WHERE id = $1;`;
+    try {
+      result = await query(q, [id]);
+    } catch (error) {
+      console.info('Error: ', error);
+    }
+  }    
   return result.rows;
 }
+
+export let deleteWhereId = async (table, id) => {
+  const q = `DELETE FROM ${table} where id = $1;`;
+  let result = '';
+  try {
+    result = await query(q, [id]);
+  } catch (error) {
+    console.info('Error: ', error);
+  }
+  return result.rows;   
+}
+
+
+
 
 // Helper to remove pg from the event loop
 export async function end() {
