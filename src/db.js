@@ -50,10 +50,11 @@ export let selectAll = async (table) => {
 }
 
 export let selectAllWhereId = async (table, id) => {
-  const q = `SELECT * FROM ${table} WHERE ID = ${id};`
+  const q = `SELECT * FROM ${table} WHERE ID = ${id};`;
+  // console.log(q);
   let result = '';
   try {
-    result = await query(q);
+    result = await query(q, [id]);
   } catch (error) {
     console.info('Error: ', error);
   }
