@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import csv from "csv-parser";
 import fs from "fs";
-import { truncateTable, query } from "./db.js";
+import { truncateTable, query } from "../src/db.js";
 
 dotenv.config();
 

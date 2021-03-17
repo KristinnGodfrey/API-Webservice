@@ -1,5 +1,5 @@
 import express from 'express';
-import { selectAll, selectSeriesById } from '../sql/db.js'
+import { selectAll, selectAllWhereId } from '../src/db.js'
 
 export const router = express.Router();
 
@@ -13,6 +13,6 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     let seriesId = req.params;
     seriesId = Number(seriesId);
-    const data = await selectSeriesById('series', seriesId);
+    const data = await selectAllWhereId('series', seriesId);
     res.json({data});
 });
