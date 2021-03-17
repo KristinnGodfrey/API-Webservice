@@ -1,4 +1,7 @@
-import { uploadImagesFromDisk } from "../sql/images.js";
+import { uploadImagesFromDisk } from "./images.js";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const {
   DATABASE_URL: databaseUrl,
@@ -10,7 +13,7 @@ const {
 
 async function main() {
   console.info(`Set upp gagnagrunn á ${databaseUrl}`);
-  console.info(`Set uppp tengingu við Cloudinary á ${cloudinaryUrl}`);
+  // console.info(`Set uppp tengingu við Cloudinary á ${cloudinaryUrl}`);
   
   // // senda myndir á Cloudinary
   // try {
