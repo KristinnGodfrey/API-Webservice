@@ -59,3 +59,8 @@ export let selectAllWhereId = async (table, id) => {
   }
   return result.rows;
 }
+
+// Helper to remove pg from the event loop
+export async function end() {
+  await pool.end();
+}
