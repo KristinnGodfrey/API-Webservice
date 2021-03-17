@@ -62,13 +62,7 @@ export async function selectAllWhereId(table, id) {
   return result.rows;
 }
 
-// export let selectAllWhereId = async (id) => {
-//   const q = `SELECT * FROM series WHERE id = ${id};`;
-//   let result = '';
-//   try {
-//     result = await query(q, [id]);
-//   } catch (error) {
-//     console.info('Error: ', error);
-//   }
-//   return result.rows;
-// }
+// Helper to remove pg from the event loop
+export async function end() {
+  await pool.end();
+}

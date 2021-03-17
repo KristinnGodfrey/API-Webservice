@@ -38,6 +38,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^8.5.1",
+    "promises": "^0.2.5",
     "xss": "^1.0.8"
   },
   "devDependencies": {
