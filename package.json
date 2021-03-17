@@ -4,7 +4,10 @@
   "description": "Útfæra skal vefþjónustur fyrir sjónvarpsþáttavef:",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "node ./src/setup.js",
+    "start": "node ./src/app.js",
+    "dev": "nodemon ./src/app.js"
   },
   "repository": {
     "type": "git",
@@ -23,11 +26,13 @@
     "csvdata": "^1.7.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
     "neat-csv": "^6.0.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.5.1",
     "xss": "^1.0.8"
   },
