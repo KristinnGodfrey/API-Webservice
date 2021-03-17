@@ -64,3 +64,19 @@ export async function createUser(username, password) {
 
   return null;
 }
+
+export async function checkAdminById(id) {
+  const q = 'SELECT * FROM users WHERE id = $1';
+
+  try {
+    const result = await query(q, [id]);
+
+    if (result.rowCount === 1) {
+      return result.rows[3];
+    }
+  } catch (e) {
+    console.error('Gat ekki fundið notanda eftir id');
+  }
+
+  return null;
+}
