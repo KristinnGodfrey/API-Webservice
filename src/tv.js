@@ -9,10 +9,10 @@ router.get('/', async (req, res) => {
     res.json({data});
 });
 
-// tv
+// tv/:id
 router.get('/:id', async (req, res) => {
-    let seriesId = req.params;
-    seriesId = Number(seriesId);
+    let seriesId = req.params.id;
+    console.log(seriesId);
     const data = await selectAllWhereId('series', seriesId);
     res.json({data});
 });

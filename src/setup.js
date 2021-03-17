@@ -1,7 +1,10 @@
 import { uploadImagesFromDisk } from "../sql/images.js";
 import { promises } from 'fs';
+import dotenv from 'dotenv';
 
 import { query, end } from './db.js';
+
+dotenv.config();
 
 const shcemaFile= './sql/schema.sql';
 
