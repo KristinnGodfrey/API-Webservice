@@ -33,7 +33,29 @@ export async function truncateTable(table){
   try {
     result = await query(q);
   } catch (e) {
-    console.info('Error occured :>> ', e);
+    console.info('Error: ', e);
+  }
+  return result.rows;
+}
+
+export let selectAll = async (table) => {
+  const q = `SELECT * FROM ${table};`;
+  let result = '';
+  try {
+    result = await query(q);
+  } catch (error) {
+    console.info('Error: ', e);
+  }
+  return result.rows;
+}
+
+export let selectSeriesById = async (table, id) => {
+  const q = `SELECT * FROM ${table} WHERE ID = ${id};`
+  let result = '';
+  try {
+    result = await query(q);
+  } catch (error) {
+    console.info('Error: ', error);
   }
   return result.rows;
 }
