@@ -49,7 +49,7 @@ export let selectAll = async (table) => {
   return result.rows;
 }
 
-export let selectSeriesById = async (table, id) => {
+export let selectAllWhereId = async (table, id) => {
   const q = `SELECT * FROM ${table} WHERE ID = ${id};`
   let result = '';
   try {
