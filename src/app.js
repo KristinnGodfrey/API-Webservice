@@ -1,5 +1,7 @@
 import express from 'express'
 import { router as tvRouter }  from './tv.js';
+import { router as seasonRouter }  from './season.js';
+import { router as episodeRouter }  from './episode.js';
 import dotenv from 'dotenv';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url'; 
@@ -44,8 +46,8 @@ app.use(passport.session());
 
 app.use('/users', authenticateRouter);
 app.use('/tv', tvRouter);
-// app.use('/tv/:id/season', seasonRouter);
-// app.use('/tv/:id/season/:seasonId/episode', episodeRouter)
+app.use('/tv/:id/season', seasonRouter);
+app.use('/tv/:id/season/:seasonId/episode', episodeRouter)
 
 app.listen(port, () => {
     console.info(`Server running at http://localhost:${port}/`);

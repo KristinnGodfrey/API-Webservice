@@ -48,6 +48,12 @@ async function insertSeries(row) {
   return query(q, values);
 }
 
+async function insertEpisodes(rows){
+  await rows.forEach((row) => {
+    console.log(row);
+  });
+};
+
 function parseCsv(file) {
   let data = [];
   return new Promise((resolve, reject) => {
@@ -64,10 +70,11 @@ function parseCsv(file) {
       });
   });
 }
+
 async function main() {
   console.info("Start inserting");
-  const file = "./data/series.csv";
-  const rows = await parseCsv(file);
+  let file = "./data/series.csv";
+  let rows = await parseCsv(file);
   // console.log(rows);
 
   await truncateTable("series");
@@ -77,8 +84,13 @@ async function main() {
 
   await truncateTable("genres");
   await insertGenres(rows);
-
   console.info("End inserting");
+
+  file = "./data/episodes.csv";
+  rows = await parseCsv(file);
+
+  await insertEpisodes(rows)
+
   await end();
 }
 
