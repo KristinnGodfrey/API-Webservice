@@ -24,7 +24,7 @@ export async function query(_query, values = []) {
   } catch (e) {
     console.info('Error', e);
   } finally {
-    await client.release();
+    client.release();
   }  
   return result;
 }
@@ -60,6 +60,17 @@ export async function selectAllWhereId(table, id) {
     console.info('Error: ', error);
   }
   return result.rows; 
+}
+
+export async function selectAllByUsername(username) {
+  const q = `SELECT id, email, admin, created, updated FROM users WHERE username = $1;`;
+  let result = '';
+  try {
+    result = await query(q, [username]);
+  }catch (error) {
+    console.info(e.message);
+  }
+  return result.rows;
 }
 
 export async function insertInto(table, row) { 
@@ -109,9 +120,6 @@ export let deleteWhereId = async (table, id) => {
   }
   return result.rows;   
 }
-
-
-
 
 // Helper to remove pg from the event loop
 export async function end() {
