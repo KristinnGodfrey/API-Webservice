@@ -121,6 +121,14 @@ export let deleteWhereId = async (table, id) => {
   return result.rows;   
 }
 
+export async function registerDB(data){
+  const q = `INSERT INTO users (username, password, email, created)
+            VALUES
+            ($1, $2, $3, $4)`;
+
+  await query(q, data);
+}
+
 // Helper to remove pg from the event loop
 export async function end() {
   await pool.end();
