@@ -53,9 +53,8 @@ async function register(req, res) {
 
   try {
     await registerDB(data);
-    console.log("eftir reg")
-    //login
-    res.redirect('/users/me');
+    res.json({username, email});
+
   } catch(e) {
     console.log(e.message);
   }
