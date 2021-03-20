@@ -25,12 +25,47 @@ async function insertGenres(rows) {
 
   //todo tengitafla milli sjónvaprsþátta og sjónvarpsþáttategundar
 }
+async function insertShows(row) {
+ 
+  const q = `
+  INSERT INTO
+    shows
+    (name, number, airDate, description, season)
+  VALUES
+    ($1, $2, $3, $4, $5)`;
+  const values = [
+    row.name,
+    row.number,
+    row.airDate,
+    row.description,
+    row.season
+  ];
+  return query(q, values);
+}
 
-async function insertSeries(row) { 
+async function insertSeason(row) {
+  const q = `
+  INSERT INTO
+    seasons
+    (name, number, airdate, description, poster, tvShowName)
+  VALUES
+    ($1, $2, $3, $4, $5, $6)`;
+
+  const values = [
+    row.name,
+    row.number,
+    row.airDate,
+    row.description,
+    row.poster,
+    row.tvShows.name
+  ];
+}
+
+async function insertTvShows(row) { 
 
   const q = `
     INSERT INTO
-      series
+      tvShows
       (name, airdate, inProduction, tagline, image, description, language, network, webpage)
     VALUES
       ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
@@ -75,6 +110,11 @@ async function main() {
   await truncateTable("series");
   for (let i = 0; i < rows.length; i++) {
     await insertSeries(rows[i]);
+  }
+
+  await truncateTable("tvShows");
+  for (let i = 0; i < rows.length; i++) {
+    await insertTvShows(rows[i]);
   }
 
   await truncateTable("genres");

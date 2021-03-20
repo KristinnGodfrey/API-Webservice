@@ -6,9 +6,9 @@ CREATE TABLE genres (
   title character varying(255) NOT NULL UNIQUE
 );
 
-CREATE TABLE series (
+CREATE TABLE tvShows (
   id serial primary key,
-  name varchar(255) NOT NULL,
+  name varchar(255) NOT NULL foreign key,
   airDate date,
   inProduction boolean,
   tagline varchar(255),
@@ -17,6 +17,25 @@ CREATE TABLE series (
   language varchar(2) NOT NULL,
   network varchar(255),
   webpage varchar(255)
+);
+
+CREATE TABLE seasons (
+  id serial primary key,
+  name varchar(255) NOT NULL,
+  number int WHERE number > 0 NOT NULL foreign key,
+  airDate date,
+  description text,
+  poster varchar(255) NOT NULL,
+  tvShowName varchar(255) NOT NULL,
+);
+
+CREATE TABLE shows (
+  id serial primary key,
+  name varchar(255) NOT NULL,
+  number int WHERE number > 0 NOT NULL,
+  airDate date,
+  description text,
+  season varchar(255) NOT NULL,
 );
 
 DROP TABLE IF EXISTS users;
