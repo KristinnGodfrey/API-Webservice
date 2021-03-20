@@ -1,8 +1,10 @@
-import express from 'express';
+import express from 'express'
 import { router as tvRouter }  from './tv.js';
+import { router as seasonRouter }  from './season.js';
+import { router as episodeRouter }  from './episode.js';
 import dotenv from 'dotenv';
 import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'url'; 
 
 import session from 'express-session';
 
@@ -22,14 +24,11 @@ if (!sessionSecret) {
   }
 
 const app = express();
+app.use(express.json());
 
 const path = dirname(fileURLToPath(import.meta.url));
 
 app.use(express.static(join(path, '../public')));
-
-
-app.set('views', join(path, '../views'));
-app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
     res.json('Hello World!')
@@ -47,8 +46,8 @@ app.use(passport.session());
 
 app.use('/users', authenticateRouter);
 app.use('/tv', tvRouter);
-// app.use('/tv/:id/season', seasonRouter);
-// app.use('/tv/:id/season/:seasonId/episode', episodeRouter)
+app.use('/tv/:id/season', seasonRouter);
+app.use('/tv/:id/season/:seasonId/episode', episodeRouter)
 
 app.listen(port, () => {
     console.info(`Server running at http://localhost:${port}/`);
