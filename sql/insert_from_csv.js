@@ -25,11 +25,11 @@ async function insertGenres(rows) {
 
   //todo tengitafla milli sjónvaprsþátta og sjónvarpsþáttategundar
 }
-async function insertShows(row) {
+async function insertEpisodes(row) {
  
   const q = `
   INSERT INTO
-    shows
+    episodes
     (name, number, airDate, description, season)
   VALUES
     ($1, $2, $3, $4, $5)`;
@@ -43,11 +43,11 @@ async function insertShows(row) {
   return query(q, values);
 }
 
-async function insertSeason(row) {
+async function insertSeasons(row) {
   const q = `
   INSERT INTO
     seasons
-    (name, number, airdate, description, poster, tvShowName)
+    (name, number, airdate, overview, poster, serie)
   VALUES
     ($1, $2, $3, $4, $5, $6)`;
 
@@ -55,17 +55,18 @@ async function insertSeason(row) {
     row.name,
     row.number,
     row.airDate,
-    row.description,
+    row.overview,
     row.poster,
-    row.tvShows.name
+    row.series.name
   ];
+  return query(q, values);
 }
 
-async function insertTvShows(row) { 
+async function insertSeries(row) { 
 
   const q = `
     INSERT INTO
-      tvShows
+      series
       (name, airdate, inProduction, tagline, image, description, language, network, webpage)
     VALUES
       ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
@@ -83,12 +84,6 @@ async function insertTvShows(row) {
   ];
   return query(q, values);
 }
-
-async function insertEpisodes(rows){
-  await rows.forEach((row) => {
-    console.log(row);
-  });
-};
 
 function parseCsv(file) {
   let data = [];
@@ -118,19 +113,17 @@ async function main() {
     await insertSeries(rows[i]);
   }
 
-  await truncateTable("tvShows");
-  for (let i = 0; i < rows.length; i++) {
-    await insertTvShows(rows[i]);
-  }
-
-  await truncateTable("genres");
-  await insertGenres(rows);
   console.info("End inserting");
 
   file = "./data/episodes.csv";
   rows = await parseCsv(file);
 
   await insertEpisodes(rows)
+  
+  file = "./data/seasons.csv"
+  rows = await parseCsv(file);
+
+  await insertSeasons(rows);
 
   await end();
 }
