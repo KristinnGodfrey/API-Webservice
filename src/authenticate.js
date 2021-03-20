@@ -1,6 +1,7 @@
 import express from 'express';
+import bcrypt from 'bcrypt';
 import passport, { ensureLoggedIn, ensureAdmin } from './login.js';
-import { selectAllByUsername, registerDB } from './db.js'
+import { selectAllByUsername, registerDB, changeDB } from './db.js'
 import jwt from 'jsonwebtoken';
 
 export const router = express.Router();
@@ -60,6 +61,47 @@ async function register(req, res) {
   }
 }
 
+// uppfærir netfang, lykilorð eða bæði ef gögn rétt, aðeins ef notandi innskráður
+async function change(req, res) {
+  const username = req.body.username;
+  let email = null;
+  let data = {};
+  let hashedPassword = null;
+
+  if (await req.body.email) {
+      email = await req.body.email;
+  }
+
+  if (req.body.password && req.body.password.length > 9 ) {
+    hashedPassword = await bcrypt.hash(req.body.password, 11);
+  }
+
+  if (email && hashedPassword) {
+    data = {
+    username,
+    email,
+    hashedPassword,
+  }
+  console.log('email & password');
+  } else if (email) {
+    data = {
+      username,
+      email
+    }
+    console.log('email');
+  } else {
+    data = {
+      username,
+      hashedPassword
+    }
+    console.log('password')
+  }
+
+  if (changeDB(data)) {
+      res.json('success');
+  }
+}
+
 
 router.get('/me', ensureLoggedIn, (req, res) => {
   me(req, res);
@@ -79,6 +121,10 @@ router.post('/login',
 // staðfestir og býr til notanda. Skilar auðkenni og netfangi. Notandi sem búinn er til skal aldrei vera stjórnandi
 router.post('/register', (req, res) => {
   register(req, res);
+})
+
+router.patch('/me', ensureLoggedIn, (req, res) => {
+  change(req, res);
 })
 
 //router.get('/', ensureAdmin);

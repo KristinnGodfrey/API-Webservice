@@ -121,12 +121,45 @@ export let deleteWhereId = async (table, id) => {
   return result.rows;   
 }
 
-export async function registerDB(data){
+export async function registerDB(data) {
   const q = `INSERT INTO users (username, password, email, created)
             VALUES
             ($1, $2, $3, $4)`;
 
   await query(q, data);
+}
+
+export async function changeDB(data) {
+  let q = ``;
+  let values = [];
+  if ( data.email && data.hashedPassword ) {
+    q = `UPDATE users SET email = $2, password = $3 
+        WHERE username = $1`;
+    values = [
+      data.username,
+      data.email,
+      data.hashedPassword
+    ]
+        console.log('email & password DB', typeof data.email);
+  } else if (data.email) {
+    q = `UPDATE users SET email = $2
+        WHERE username = $1`
+    console.log('email DB');
+    values = [
+      data.username,
+      data.email
+    ]
+  } else {
+    q = `UPDATE users SET password = $2
+        WHERE username = $1`
+    console.log('password DB')
+    values = [
+      data.username,
+      data.hashedPassword
+    ]
+  }
+
+  await query(q, values)
 }
 
 // Helper to remove pg from the event loop
