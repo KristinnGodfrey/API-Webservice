@@ -139,6 +139,7 @@ router.get('/', ensureAdmin, (res) => {
   selectUsers(res);
 });
 
+// tékkar hvort notandi sé innskráður og admin, birtir síðan user með id úr slóð
 router.get('/:id', ensureAdmin, (req, res) => {
   const data = findByUsername(req.username);
   res.json(data);
