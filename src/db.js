@@ -140,27 +140,27 @@ export async function changeDB(data) {
       data.username,
       data.email,
       data.hashedPassword
-    ]
+    ];
         console.log('email & password DB', typeof data.email);
   } else if (data.email) {
     q = `UPDATE users SET email = $2
-        WHERE username = $1`
+        WHERE username = $1`;
     console.log('email DB');
     values = [
       data.username,
       data.email
-    ]
+    ];
   } else {
     q = `UPDATE users SET password = $2
-        WHERE username = $1`
+        WHERE username = $1`;
     console.log('password DB')
     values = [
       data.username,
       data.hashedPassword
-    ]
+    ];
   }
 
-  await query(q, values)
+  await query(q, values);
 }
 
 // Helper to remove pg from the event loop

@@ -12,7 +12,7 @@ export async function comparePasswords(password, hash) {
 }
 
 export async function findByUsername(username) {
-  const q = 'SELECT * FROM users WHERE username = $1';
+  const q = `SELECT * FROM users WHERE username = $1`;
 
   try {
     const result = await query(q, [username]);
@@ -29,7 +29,7 @@ export async function findByUsername(username) {
 }
 
 export async function findById(id) {
-  const q = 'SELECT * FROM users WHERE id = $1';
+  const q = `SELECT * FROM users WHERE id = $1`;
 
   try {
     const result = await query(q, [id]);
@@ -66,7 +66,7 @@ export async function createUser(username, password) {
 }
 
 export async function checkAdminById(id) {
-  const q = 'SELECT * FROM users WHERE id = $1 AND admin == TRUE';
+  const q = `SELECT * FROM users WHERE id = $1 AND admin == TRUE`;
 
   try {
     const result = await query(q, [id]);
@@ -82,7 +82,7 @@ export async function checkAdminById(id) {
 }
 
 export async function checkAdminByUsername(username) {
-  const q = 'SELECT * FROM users WHERE username = $1 AND admin == TRUE';
+  const q = `SELECT * FROM users WHERE username = $1 AND admin == TRUE`;
 
   try {
     await query(q, [username]);

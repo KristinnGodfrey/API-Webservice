@@ -19,6 +19,8 @@ CREATE TABLE series (
   webpage varchar(255)
 );
 
+DROP TABLE IF EXISTS seasons;
+
 CREATE TABLE seasons (
   id serial primary key,
   name varchar(255) NOT NULL,
@@ -28,6 +30,8 @@ CREATE TABLE seasons (
   poster varchar(255) NOT NULL,
   seriesName varchar(255) NOT NULL
 );
+
+DROP TABLE IF EXISTS episodes;
 
 CREATE TABLE episodes (
   id serial primary key,
