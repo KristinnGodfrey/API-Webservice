@@ -66,7 +66,7 @@ export async function createUser(username, password) {
 }
 
 export async function checkAdminById(id) {
-  const q = 'SELECT * FROM users WHERE id = $1';
+  const q = 'SELECT * FROM users WHERE id = $1 AND admin == TRUE';
 
   try {
     const result = await query(q, [id]);
@@ -80,3 +80,18 @@ export async function checkAdminById(id) {
 
   return null;
 }
+
+export async function checkAdminByUsername(username) {
+  const q = 'SELECT * FROM users WHERE username = $1 AND admin == TRUE';
+
+  try {
+    await query(q, [username]);
+    return true;
+    
+  } catch (e) {
+    console.error('Gat ekki fundið admin með þetta username');
+  }
+
+  return null;
+}
+

@@ -1,8 +1,9 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import passport, { ensureLoggedIn, ensureAdmin } from './login.js';
-import { selectAllByUsername, registerDB, changeDB } from './db.js'
+import { selectAllByUsername, registerDB, changeDB, selectAll } from './db.js';
 import jwt from 'jsonwebtoken';
+import { findByUsername } from './users.js';
 
 export const router = express.Router();
 router.use(express.json());
@@ -102,6 +103,12 @@ async function change(req, res) {
   }
 }
 
+async function selectUsers(res) {
+  const data = await selectAll('users');
+  console.log('auth');
+  await res.json({ data });
+
+}
 
 router.get('/me', ensureLoggedIn, (req, res) => {
   me(req, res);
@@ -127,6 +134,12 @@ router.patch('/me', ensureLoggedIn, (req, res) => {
   change(req, res);
 })
 
-//router.get('/', ensureAdmin);
-//router.get('/:id', ensureAdmin); //get skilar notanda - patch breytir admin boolean
-//router.get('/register', register); //post validatear og býr til noanda, skilar auðkenni og netfangi
+//tékkar hvort notandi sé innskráður og admin, birtir síðan notendur
+router.get('/', ensureAdmin, (res) => {
+  selectUsers(res);
+});
+
+router.get('/:id', ensureAdmin, (req, res) => {
+  const data = findByUsername(req.username);
+  res.json(data);
+})

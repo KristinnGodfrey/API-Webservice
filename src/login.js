@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy } from 'passport-local';
 
-import { comparePasswords, findByUsername, findById, checkAdminById } from './users.js';
+import { comparePasswords, findByUsername, findById, checkAdminById, checkAdminByUsername } from './users.js';
 
 /**
  * Athugar hvort username og password sé til í notandakerfi.
@@ -62,6 +62,8 @@ export function ensureLoggedIn(req, res, next) {
 
 export function ensureAdmin(req, res, next) {
   if (req.isAuthenticated() && req.checkAdminById) {
+    return next();
+  } else if (req.isAuthenticated() && checkAdminByUsername(req.username)) {
     return next();
   }
 

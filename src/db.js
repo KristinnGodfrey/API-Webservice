@@ -22,6 +22,7 @@ export async function query(_query, values = []) {
   try {
     result = await client.query(_query, values);
   } catch (e) {
+    console.log('villa í query');
     console.info('Error', e);
   } finally {
     client.release();
@@ -41,7 +42,7 @@ export async function truncateTable(table){
 }
 
 export let selectAll = async (table) => {
-  const q = `SELECT * FROM ${table};`;
+  const q = `SELECT * FROM ${table}`;
   let result = '';
   try {
     result = await query(q);
