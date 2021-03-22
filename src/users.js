@@ -95,3 +95,8 @@ export async function checkAdminByUsername(username) {
   return null;
 }
 
+export async function changeStatus(status, id) {
+  const q = `UPDATE users SET admin = ${status} WHERE id = $1`;
+  await query(q, [id]);
+}
+

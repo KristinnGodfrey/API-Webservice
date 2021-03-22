@@ -1,20 +1,12 @@
 import express from 'express';
+import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
-import passport, { ensureLoggedIn, ensureAdmin } from './login.js';
+import passport, { ensureLoggedIn, ensureAdmin, getAccess } from './login.js';
 import { selectAllByUsername, registerDB, changeDB, selectAll } from './db.js';
-import jwt from 'jsonwebtoken';
-import { findByUsername } from './users.js';
+import { findById, findByUsername, changeStatus } from './users.js';
 
 export const router = express.Router();
 router.use(express.json());
-
-//helper til að fá token
-function getAccess(req, res){
-  const username = {name: req.body.username};
-
-  const accessToken = jwt.sign(username, process.env.ACCESS_TOKEN_SECRET);
-  return accessToken;
-}
 
 function login(req,res){
   const access = {token: getAccess(req, res)};
@@ -53,12 +45,10 @@ async function register(req, res) {
   
   console.log(data);
 
-  try {
-    await registerDB(data);
-    res.json({username, email});
-
-  } catch(e) {
-    console.log(e.message);
+  if (await registerDB(data)) {
+      res.json({username, email});
+  } else {
+    res.json('invalid user info, try again with new values');
   }
 }
 
@@ -107,23 +97,26 @@ async function selectUsers(res) {
   const data = await selectAll('users');
   console.log('auth');
   await res.json({ data });
-
 }
+
+async function loginCheck(req, res, next) {
+  const data = validationResult(await req);
+  if (data.errors = []) {
+    return next()
+  } else {
+    console.log(data);
+    res.json('loginCheck failure')
+    return null;
+  }
+}
+
 
 router.get('/me', ensureLoggedIn, (req, res) => {
   me(req, res);
 }); //get skilar uppl um notenda sem á token - patch uppfærir uppl
 
-router.post('/login',
-
-    // Þetta notar strat að ofan til að skrá notanda inn
-    passport.authenticate('local', {
-    failureRedirect: '/',
-  }),
-
-  (req, res) => {
-    login(req, res);
-  });
+// todo tékka á input áður en loginCheck keyrir
+router.post('/login', loginCheck, login);
 
 // staðfestir og býr til notanda. Skilar auðkenni og netfangi. Notandi sem búinn er til skal aldrei vera stjórnandi
 router.post('/register', (req, res) => {
@@ -141,6 +134,27 @@ router.get('/', ensureAdmin, (res) => {
 
 // tékkar hvort notandi sé innskráður og admin, birtir síðan user með id úr slóð
 router.get('/:id', ensureAdmin, (req, res) => {
-  const data = findByUsername(req.username);
+  const data = findById(req.params.id);
   res.json(data);
+})
+
+// breytir hvort notandi sé stjórnandi eða ekki, aðeins ef notandi sem framkvæmir er stjórnandi og er ekki að breyta sér sjálfum
+router.patch('/:id', ensureAdmin, (req, res) => {
+  const target = findById(req.params.id);
+  const targetId = target.id;
+  if (req.body.username != target.username) { // er ekki að breyta sér sjálfum
+    if (target.admin == true) {
+      if (changeStatus(false, targetId)) {
+        res.json('set to false');
+      } else {
+        res.json('unsuccessful')
+      }
+    } else {
+      if (changeStatus(true, targetId)) {
+        res.json('set to true');
+      } else {
+        res.json('unsuccessful');
+      }
+    }
+  }
 })

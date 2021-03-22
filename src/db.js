@@ -22,7 +22,6 @@ export async function query(_query, values = []) {
   try {
     result = await client.query(_query, values);
   } catch (e) {
-    console.log('villa í query');
     console.info('Error', e);
   } finally {
     client.release();
@@ -127,7 +126,9 @@ export async function registerDB(data) {
             VALUES
             ($1, $2, $3, $4)`;
 
-  await query(q, data);
+  let result = '';
+  result = await query(q, data);
+  return result;
 }
 
 export async function changeDB(data) {

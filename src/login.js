@@ -1,69 +1,63 @@
 import passport from 'passport';
-import { Strategy } from 'passport-local';
+//import { Strategy } from 'passport-local';
+import { Strategy, ExtractJwt } from 'passport-jwt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 import { comparePasswords, findByUsername, findById, checkAdminById, checkAdminByUsername } from './users.js';
 
-/**
- * Athugar hvort username og password sé til í notandakerfi.
- * Callback tekur við villu sem fyrsta argument, annað argument er
- * - `false` ef notandi ekki til eða lykilorð vitlaust
- * - Notandahlutur ef rétt
- *
- * @param {string} username Notandanafn til að athuga
- * @param {string} password Lykilorð til að athuga
- * @param {function} done Fall sem kallað er í með niðurstöðu
- */
-async function strat(username, password, done) {
+dotenv.config();
+
+const {
+  JWT_SECRET: jwtSecret,
+  TOKEN_LIFETIE: tokenLifetime = 3600,
+} = process.env;
+
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: jwtSecret,
+};
+
+function stratToken(data, next) {
   try {
-    const user = await findByUsername(username);
+    const user = findById(data.id);
 
-    if (!user) {
-      return done(null, false);
+    if(user) {
+      return next(null, user);
+    } else {
+      return next(null, false);
     }
-
-    // Verður annað hvort notanda hlutur ef lykilorð rétt, eða false
-    const result = await comparePasswords(password, user.password);
-    return done(null, result ? user : false);
-  } catch (err) {
-    console.error(err);
-    return done(err);
+  } catch(e) {
+    console.info(e.message);
   }
+};
+
+passport.use(
+  new Strategy(jwtOptions, stratToken),
+);
+
+//helper til að fá token
+export function getAccess(req, res){
+  const username = {name: req.body.username};
+
+  const accessToken = jwt.sign(username, process.env.JWT_SECRET);
+  return accessToken;
 }
 
-// Notum local strategy með „strattinu“ okkar til að leita að notanda
-passport.use(new Strategy(strat));
-
-// getum stillt með því að senda options hlut með
-// passport.use(new Strategy({ usernameField: 'email' }, strat));
-
-// Geymum id á notanda í session, það er nóg til að vita hvaða notandi þetta er
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-// Sækir notanda út frá id
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
-});
-
 // Hjálpar middleware sem athugar hvort notandi sé innskráður og hleypir okkur
-// þá áfram, annars sendir á /login
+// þá áfram, annars sendir á /
 export function ensureLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
+  //if (req.isAuthenticated()) { //breyta í validate by token
+  if (getAccess(req, res) != false) {
+  return next();
   }
-  res.redirect('/');
+  res.json('unsuccesfull login');
 }
 
 export function ensureAdmin(req, res, next) {
-  if (req.isAuthenticated() && req.checkAdminById) {
+  if ((getAccess(req, res) != false) && req.checkAdminById) {
     return next();
-  } else if (req.isAuthenticated() && checkAdminByUsername(req.username)) {
+  } else if ((getAccess(req, res) != false) && checkAdminByUsername(req.username)) {
     return next();
   }
 
