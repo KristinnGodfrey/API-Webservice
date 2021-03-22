@@ -1,4 +1,3 @@
-import { uploadImagesFromDisk } from "../sql/images.js";
 import { promises } from 'fs';
 import dotenv from 'dotenv';
 
@@ -14,7 +13,7 @@ const {
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,  
   IMAGE_FOLDER: imageFolder = "./data/img",*/
-} = process.env;
+} = process.env; //eslint-disable-line no-undef
 
 async function main() {
   console.info(`Set upp gagnagrunn á ${databaseUrl}`);

@@ -15,9 +15,6 @@ router.get("/", async (req, res) => {
   res.json({ data });
 });
 
-function requireAuth() {
-  return;
-}
 
 // tv POST
 router.post("/", async (req, res) => {
@@ -74,5 +71,7 @@ router.delete("/:id", async (req, res) => {
   }
 
   const data = await deleteWhereId("series", seriesId);
+  if (data) {
   res.json({ message: "delete successful" });
+  }
 });
