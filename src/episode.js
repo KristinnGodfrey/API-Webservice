@@ -14,7 +14,7 @@ router.post("/:id/episode", async (req, res) => {
   //todo error handling, authentication
   const row = req.body.data[0];
   console.info("POST: inserting row to db");
-  insertInto("episode", row);
+  insertInto("episodes", row);
   console.info("finished inserting");
 
   res.json({ success: "success" });
@@ -31,7 +31,7 @@ router.get("/:id", async (req, res) => {
     });
   }
 
-  const data = await selectAllWhereId("episode", myId);
+  const data = await selectAllWhereId("episodes", myId);
   res.json({ data });
 });
 
@@ -47,6 +47,6 @@ router.delete("/:id", async(req,res) => {
       });
     }
   
-    const data = await deleteWhereId("episode", myId);
+    const data = await deleteWhereId("episodes", myId);
     res.json({ message: "delete successful" })
 })

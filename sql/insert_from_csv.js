@@ -47,18 +47,20 @@ async function insertSeasons(row) {
   const q = `
   INSERT INTO
     seasons
-    (name, number, airdate, overview, poster, serie)
+    (name, number, airdate, overview, poster, serie, serieId)
   VALUES
-    ($1, $2, $3, $4, $5, $6)`;
+    ($1, $2, $3, $4, $5, $6, $7)`;
 
   const values = [
     row.name,
     row.number,
-    row.airDate,
+    row.airDate == '' ? null : row.airDate,
     row.overview,
     row.poster,
-    row.series.name,
+    row.serie,
+    row.serieId
   ];
+  // console.log(values);
   return query(q, values);
 }
 
@@ -114,20 +116,26 @@ async function main() {
   }
 
   console.info("inserting genres")
+  await truncateTable("genres");
+  await insertGenres(rows);
   
-
+  console.info("inserting episodes")
   file = "./data/episodes.csv";
   rows = await parseCsv(file);
 
+  await truncateTable("episodes")
   for (let i = 0; i < rows.length; i++) {
     await insertEpisodes(rows[i]);
   }
 
-  // file = "./data/seasons.csv"
-  // rows = await parseCsv(file);
+  console.info("inserting seasons");
+  file = "./data/seasons.csv"
+  rows = await parseCsv(file);
 
-  // await insertSeasons(rows);
-
+  await truncateTable("seasons");
+  for(let i = 0; i < rows.length; i++){
+    await insertSeasons(rows[i]);
+  }  
   console.info("End inserting");
   await end();
 }

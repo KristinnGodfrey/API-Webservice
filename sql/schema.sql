@@ -26,9 +26,11 @@ CREATE TABLE seasons (
   name varchar(255) NOT NULL,
   number int NOT NULL, /* WHERE number > 0 */
   airDate date,
-  description text,
+  overview text,
   poster varchar(255) NOT NULL,
-  seriesName varchar(255) NOT NULL
+  serie varchar(255) NOT NULL,
+  serieId int/*,
+  serieId int REFERENCES serie(id)*/
 );
 
 DROP TABLE IF EXISTS episodes;
