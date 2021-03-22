@@ -29,7 +29,7 @@ CREATE TABLE seasons (
   overview text,
   poster varchar(255) NOT NULL,
   serie varchar(255) NOT NULL,
-  serieId int/*,
+  serieId int FOREIGN KEY REFERENCES serie(id)/*,
   serieId int REFERENCES serie(id)*/
 );
 

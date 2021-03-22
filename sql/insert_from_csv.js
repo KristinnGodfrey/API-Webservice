@@ -44,6 +44,7 @@ async function insertEpisodes(row) {
 }
 
 async function insertSeasons(row) {
+  
   const q = `
   INSERT INTO
     seasons
