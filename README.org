@@ -2,7 +2,11 @@
 
 ** Setup and run
 - ~npm run setup~
+- ~npm run insert~
 - ~npm run dev~
+
+** eslint
+- ~npm run test~
 
 ** login info
 **** localhost:3000/users/login
