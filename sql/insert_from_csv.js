@@ -2,8 +2,63 @@ import dotenv from "dotenv";
 import csv from "csv-parser";
 import fs from "fs";
 import { truncateTable, query, end } from "../src/db.js";
+import { v2 } from 'cloudinary';
+import * as cImgs from "../src/images.js";
 
 dotenv.config();
+
+// const MIMETYPES = [
+//   'image/jpeg',
+//   'image/png',
+//   'image/gif',
+// ];
+
+// async function updateProductWithImage(req, res, next) {
+//   const { id } = req.params;
+//   const { title, price, description, category } = req.body;
+
+//   // file er tómt ef engri var uploadað
+//   const { file: { path, mimetype } = {} } = req;
+
+//   const hasImage = Boolean(path && mimetype);
+
+//   const product = { title, price, description, category };
+
+//   const validations = await validateProduct(product, true, id);
+
+//   if (hasImage) {
+//     if (!validateImageMimetype(mimetype)) {
+//       validations.push({
+//         field: 'image',
+//         error: `Mimetype ${mimetype} is not legal. ` +
+//                `Only ${MIMETYPES.join(', ')} are accepted`,
+//       });
+//     }
+//   }
+//   if (hasImage) {
+//     let upload = null;
+//     try {
+//       upload = await cloudinary.uploader.upload(path);
+//     } catch (error) {
+//       // Skilum áfram villu frá Cloudinary, ef einhver
+//       if (error.http_code && error.http_code === 400) {
+//         return res.status(400).json({ errors: [{
+//           field: 'image',
+//           error: error.message,
+//         }] });
+//       }
+
+//       console.error('Unable to upload file to cloudinary');
+//       return next(error);
+//     }
+
+//     if (upload && upload.secure_url) {
+//       product.image = upload.secure_url;
+//     } else {
+//       // Einhverja hluta vegna er ekkert `secure_url`?
+//       return next(new Error('Cloudinary upload missing secure_url'));
+//     }
+//   }
 
 async function insertGenres(rows) {
   let genres = [];
@@ -36,15 +91,18 @@ async function insertEpisodes(row) {
   const values = [
     row.name,
     row.number,
-    row.airDate == '' ? null : row.airDate,
+    row.airDate == "" ? null : row.airDate,
     row.description,
     row.season,
+
+    // cImgs.uploadImageIfNotUploaded
   ];
+
+
   return query(q, values);
 }
 
 async function insertSeasons(row) {
-  
   const q = `
   INSERT INTO
     seasons
@@ -55,11 +113,11 @@ async function insertSeasons(row) {
   const values = [
     row.name,
     row.number,
-    row.airDate == '' ? null : row.airDate,
+    row.airDate == "" ? null : row.airDate,
     row.overview,
     row.poster,
     row.serie,
-    row.serieId
+    row.serieId,
   ];
   // console.log(values);
   return query(q, values);
@@ -72,6 +130,7 @@ async function insertSeries(row) {
       (name, airdate, inProduction, tagline, image, description, language, network, webpage)
     VALUES
       ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
+  
 
   const values = [
     row.name,
@@ -106,37 +165,35 @@ function parseCsv(file) {
 
 async function main() {
   console.info("Start inserting");
-  let file = "./data/series.csv";
-  let rows = await parseCsv(file);
-  // console.log(rows);
 
-  console.info("inserting series")
+  console.info("inserting series");
+  let file = "./data/series.csv";
+  let rows = await parseCsv(file);  
   await truncateTable("series");
   for (let i = 0; i < rows.length; i++) {
     await insertSeries(rows[i]);
   }
 
-  console.info("inserting genres")
+  console.info("inserting genres");
   await truncateTable("genres");
   await insertGenres(rows);
-  
-  console.info("inserting episodes")
+
+  console.info("inserting episodes");
   file = "./data/episodes.csv";
   rows = await parseCsv(file);
-
-  await truncateTable("episodes")
+  await truncateTable("episodes");
   for (let i = 0; i < rows.length; i++) {
     await insertEpisodes(rows[i]);
   }
 
   console.info("inserting seasons");
-  file = "./data/seasons.csv"
+  file = "./data/seasons.csv";
   rows = await parseCsv(file);
-
   await truncateTable("seasons");
-  for(let i = 0; i < rows.length; i++){
+  for (let i = 0; i < rows.length; i++) {
     await insertSeasons(rows[i]);
-  }  
+  }
+  
   console.info("End inserting");
   await end();
 }
