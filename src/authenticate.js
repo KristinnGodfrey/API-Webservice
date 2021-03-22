@@ -93,10 +93,11 @@ async function change(req, res) {
   }
 }
 
-async function selectUsers(res) {
-  const data = await selectAll('users');
-  console.log('auth');
-  await res.json({ data });
+async function selectUsers() {
+  const data = await selectAll("users");
+  if (data) {
+    console.log('success');
+  }
 }
 
 async function loginCheck(req, res, next) {
@@ -128,9 +129,7 @@ router.patch('/me', ensureLoggedIn, (req, res) => {
 })
 
 //tékkar hvort notandi sé innskráður og admin, birtir síðan notendur
-router.get('/', ensureAdmin, (res) => {
-  selectUsers(res);
-});
+router.get('/', ensureAdmin, selectUsers);
 
 // tékkar hvort notandi sé innskráður og admin, birtir síðan user með id úr slóð
 router.get('/:id', ensureAdmin, (req, res) => {

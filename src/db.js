@@ -18,16 +18,15 @@ const pool = new pg.Pool({ connectionString, ssl });
 
 export async function query(_query, values = []) {
   const client = await pool.connect();
-  let result = "";
   try {
-    result = await client.query(_query, values);
+    const result = await client.query(_query, values);
+    return result;
   } catch (e) {
     console.log("villa í query");
     console.info("Error", e);
   } finally {
     client.release();
   }
-  return result;
 }
 
 export async function truncateTable(table) {
@@ -42,7 +41,8 @@ export async function truncateTable(table) {
 }
 
 export let selectAll = async (table) => {
-  const q = `SELECT * FROM ${table}`;
+  console.log(table);
+  const q = `SELECT * FROM ${table};`;
   let result = "";
   try {
     result = await query(q);
