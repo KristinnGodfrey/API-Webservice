@@ -1,10 +1,8 @@
 import express from "express";
 import {
-  selectAll,
   selectAllWhereId,
   insertIntoEpisodes,
   deleteWhereId,
-  patchWhereId,
 } from "./db.js";
 import { ensureAdmin, ensureLoggedIn } from "./login.js";
 
@@ -53,6 +51,7 @@ router.delete(
     }
 
     const data = await deleteWhereId("episodes", myId);
-    res.json({ message: "delete successful" });
-  }
-);
+    if (data){
+    res.json({ message: "delete successful" })
+    }
+})

@@ -13,12 +13,15 @@ import passport from "./login.js";
 
 dotenv.config();
 
-const { PORT: port = 3000, SESSION_SECRET: sessionSecret } = process.env;
+const {
+    PORT: port = 3000,
+    SESSION_SECRET: sessionSecret,
+} = process.env; //eslint-disable-line no-undef
 
 if (!sessionSecret) {
-  console.error("Vantar gögn í env");
-  process.exit(1);
-}
+    console.error('Vantar gögn í env');
+    process.exit(1); //eslint-disable-line no-undef
+  }
 
 const app = express();
 app.use(express.json());

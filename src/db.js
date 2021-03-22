@@ -6,11 +6,11 @@ dotenv.config();
 const {
   DATABASE_URL: connectionString,
   NODE_ENV: nodeEnv = "development",
-} = process.env;
+} = process.env; //eslint-disable-line no-undef
 
 if (!connectionString) {
   console.error("Vantar DATABASE_URL");
-  process.exit(1);
+  process.exit(1); //eslint-disable-line no-undef
 }
 
 const ssl = nodeEnv !== "development" ? { rejectUnauthorized: false } : false;
@@ -36,7 +36,7 @@ export async function truncateTable(table) {
   try {
     result = await query(q);
   } catch (e) {
-    console.info("Error: ", e);
+    console.info("Error: ", e.message);
   }
   return result.rows;
 }
@@ -47,7 +47,7 @@ export let selectAll = async (table) => {
   try {
     result = await query(q);
   } catch (error) {
-    console.info("Error: ", e);
+    console.info("Error: ", e.message); //eslint-disable-line no-undef
   }
   return result.rows;
 };
@@ -69,7 +69,7 @@ export async function selectAllByUsername(username) {
   try {
     result = await query(q, [username]);
   } catch (error) {
-    console.info(e.message);
+    console.info("Error: ", e.message); //eslint-disable-line no-undef
   }
   return result.rows;
 }
