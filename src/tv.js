@@ -1,5 +1,11 @@
 import express from "express";
-import { selectAll, selectAllWhereId, insertInto, deleteWhereId, patchWhereId } from "../src/db.js";
+import {
+  selectAll,
+  selectAllWhereId,
+  insertIntoSeries,
+  deleteWhereId,
+  patchWhereId,
+} from "../src/db.js";
 
 export const router = express.Router();
 
@@ -18,8 +24,7 @@ router.post("/", async (req, res) => {
   //todo error handling, authentication
   const row = req.body.data[0];
   console.info("POST: inserting row to db");
-  insertInto('series', row); 
-  console.info("finished inserting");
+  insertIntoSeries(row);
 
   res.json({ success: "success" });
 });
@@ -40,7 +45,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // tv:id PATCH
-router.patch("/:id", async(req,res) => {
+router.patch("/:id", async (req, res) => {
   //todo authenticate
   let seriesId = Number(req.params.id);
   const row = req.body.data[0];
@@ -53,12 +58,11 @@ router.patch("/:id", async(req,res) => {
   }
 
   await patchWhereId("series", seriesId, row);
-  res.json({ message: "patch successful" })
-})
-
+  res.json({ message: "patch successful" });
+});
 
 // tv:id DELETE
-router.delete("/:id", async(req,res) => {
+router.delete("/:id", async (req, res) => {
   //todo authenticate
   let seriesId = Number(req.params.id);
 
@@ -70,5 +74,5 @@ router.delete("/:id", async(req,res) => {
   }
 
   const data = await deleteWhereId("series", seriesId);
-  res.json({ message: "delete successful" })
-})
+  res.json({ message: "delete successful" });
+});

@@ -1,87 +1,86 @@
-import pg from 'pg';
-import dotenv from 'dotenv';
+import pg from "pg";
+import dotenv from "dotenv";
 
 dotenv.config();
 
 const {
   DATABASE_URL: connectionString,
-  NODE_ENV: nodeEnv = 'development',
+  NODE_ENV: nodeEnv = "development",
 } = process.env;
 
 if (!connectionString) {
-  console.error('Vantar DATABASE_URL');
+  console.error("Vantar DATABASE_URL");
   process.exit(1);
 }
 
-const ssl = nodeEnv !== 'development' ? { rejectUnauthorized: false } : false;
+const ssl = nodeEnv !== "development" ? { rejectUnauthorized: false } : false;
 const pool = new pg.Pool({ connectionString, ssl });
 
 export async function query(_query, values = []) {
   const client = await pool.connect();
-  let result = '';
+  let result = "";
   try {
     result = await client.query(_query, values);
   } catch (e) {
-    console.log('villa í query');
-    console.info('Error', e);
+    console.log("villa í query");
+    console.info("Error", e);
   } finally {
     client.release();
-  }  
+  }
   return result;
 }
 
-export async function truncateTable(table){
+export async function truncateTable(table) {
   const q = `TRUNCATE TABLE ${table} RESTART IDENTITY;`;
-  let result = '';
+  let result = "";
   try {
     result = await query(q);
   } catch (e) {
-    console.info('Error: ', e);
+    console.info("Error: ", e);
   }
   return result.rows;
 }
 
 export let selectAll = async (table) => {
   const q = `SELECT * FROM ${table}`;
-  let result = '';
+  let result = "";
   try {
     result = await query(q);
   } catch (error) {
-    console.info('Error: ', e);
+    console.info("Error: ", e);
+  }
+  return result.rows;
+};
+
+export async function selectAllWhereId(table, id) {
+  const q = `SELECT * FROM ${table} WHERE id = $1;`;
+  let result = "";
+  try {
+    result = await query(q, [id]);
+  } catch (error) {
+    console.info("Error: ", error);
   }
   return result.rows;
 }
 
-export async function selectAllWhereId(table, id) {
-  const q = `SELECT * FROM ${table} WHERE id = $1;`;
-  let result = '';
-  try {
-    result = await query(q, [id]);
-  } catch (error) {
-    console.info('Error: ', error);
-  }
-  return result.rows; 
-}
-
 export async function selectAllByUsername(username) {
   const q = `SELECT id, email, admin, created, updated FROM users WHERE username = $1;`;
-  let result = '';
+  let result = "";
   try {
     result = await query(q, [username]);
-  }catch (error) {
+  } catch (error) {
     console.info(e.message);
   }
   return result.rows;
 }
 
-export async function insertInto(table, row) { 
+export async function insertIntoSeries(row) {
   const q = `
     INSERT INTO
-      ${table}
+      series
       (name, airdate, inProduction, tagline, image, description, language, network, webpage)
     VALUES
       ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
-
   const values = [
     row.name,
     row.airDate,
@@ -96,31 +95,71 @@ export async function insertInto(table, row) {
   return query(q, values);
 }
 
+export async function insertIntoSeasons(row) {
+  const q = `
+    INSERT INTO
+      seasons
+      (name,number,airDate,overview,poster,serie,serieId)
+    VALUES
+      ($1, $2, $3, $4, $5, $6, $7)`;
+
+  const values = [
+    row.name,
+    row.number,
+    row.airDate,
+    row.overview,
+    row.poster,
+    row.serie,
+    row.serieId,
+  ];
+  return query(q, values);
+}
+
+export async function insertIntoEpisodes(row) {
+  const q = `
+    INSERT INTO
+      episodes
+      (name, number, airDate, overview, season, serie, serieId)
+    VALUES
+      ($1, $2, $3, $4, $5, $6, $7)`;
+
+  const values = [
+    row.name,
+    row.number,
+    row.airDate,
+    row.overview,
+    row.season,
+    row.serie,
+    row.serieId,
+  ];
+  return query(q, values);
+}
+
 export let patchWhereId = async (table, id, row) => {
   // console.log(row);
   let q;
-  let result = '';
+  let result = "";
   for (const [key, value] of Object.entries(row)) {
     q = `UPDATE ${table} SET ${key} = '${value}' WHERE id = $1;`;
     try {
       result = await query(q, [id]);
     } catch (error) {
-      console.info('Error: ', error);
+      console.info("Error: ", error);
     }
-  }    
+  }
   return result.rows;
-}
+};
 
 export let deleteWhereId = async (table, id) => {
   const q = `DELETE FROM ${table} where id = $1;`;
-  let result = '';
+  let result = "";
   try {
     result = await query(q, [id]);
   } catch (error) {
-    console.info('Error: ', error);
+    console.info("Error: ", error);
   }
-  return result.rows;   
-}
+  return result.rows;
+};
 
 export async function registerDB(data) {
   const q = `INSERT INTO users (username, password, email, created)
@@ -133,31 +172,21 @@ export async function registerDB(data) {
 export async function changeDB(data) {
   let q = ``;
   let values = [];
-  if ( data.email && data.hashedPassword ) {
+  if (data.email && data.hashedPassword) {
     q = `UPDATE users SET email = $2, password = $3 
         WHERE username = $1`;
-    values = [
-      data.username,
-      data.email,
-      data.hashedPassword
-    ];
-        console.log('email & password DB', typeof data.email);
+    values = [data.username, data.email, data.hashedPassword];
+    console.log("email & password DB", typeof data.email);
   } else if (data.email) {
     q = `UPDATE users SET email = $2
         WHERE username = $1`;
-    console.log('email DB');
-    values = [
-      data.username,
-      data.email
-    ];
+    console.log("email DB");
+    values = [data.username, data.email];
   } else {
     q = `UPDATE users SET password = $2
         WHERE username = $1`;
-    console.log('password DB')
-    values = [
-      data.username,
-      data.hashedPassword
-    ];
+    console.log("password DB");
+    values = [data.username, data.hashedPassword];
   }
 
   await query(q, values);

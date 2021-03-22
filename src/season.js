@@ -1,5 +1,5 @@
 import express from "express";
-import { selectAll, selectAllWhereId, insertInto, deleteWhereId, patchWhereId } from "./db.js";
+import { selectAll, selectAllWhereId, insertIntoSeasons, deleteWhereId, patchWhereId } from "./db.js";
 
 export const router = express.Router();
 
@@ -13,9 +13,9 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   //todo error handling, authentication
   const row = req.body.data[0];
+  console.log(row);
   console.info("POST: inserting row to db");
-  insertInto('seasons', row); 
-  console.info("finished inserting");
+  insertIntoSeasons(row); 
 
   res.json({ success: "success" });
 });

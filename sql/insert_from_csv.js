@@ -85,17 +85,18 @@ async function insertEpisodes(row) {
   const q = `
   INSERT INTO
     episodes
-    (name, number, airDate, description, season)
+    (name, number, airDate, overview, season, serie, serieId)
   VALUES
-    ($1, $2, $3, $4, $5)`;
+    ($1, $2, $3, $4, $5, $6, $7)`;
+    
   const values = [
     row.name,
     row.number,
     row.airDate == "" ? null : row.airDate,
-    row.description,
+    row.overview,
     row.season,
-
-    // cImgs.uploadImageIfNotUploaded
+    row.serie,
+    row.serieId
   ];
 
 
@@ -178,13 +179,6 @@ async function main() {
   await truncateTable("genres");
   await insertGenres(rows);
 
-  console.info("inserting episodes");
-  file = "./data/episodes.csv";
-  rows = await parseCsv(file);
-  await truncateTable("episodes");
-  for (let i = 0; i < rows.length; i++) {
-    await insertEpisodes(rows[i]);
-  }
 
   console.info("inserting seasons");
   file = "./data/seasons.csv";
@@ -193,6 +187,15 @@ async function main() {
   for (let i = 0; i < rows.length; i++) {
     await insertSeasons(rows[i]);
   }
+
+  console.info("inserting episodes");
+  file = "./data/episodes.csv";
+  rows = await parseCsv(file);
+  await truncateTable("episodes");
+  for (let i = 0; i < rows.length; i++) {
+    await insertEpisodes(rows[i]);
+  }
+
   
   console.info("End inserting");
   await end();

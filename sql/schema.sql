@@ -29,8 +29,7 @@ CREATE TABLE seasons (
   overview text,
   poster varchar(255) NOT NULL,
   serie varchar(255) NOT NULL,
-  serieId int FOREIGN KEY REFERENCES serie(id)/*,
-  serieId int REFERENCES serie(id)*/
+  serieId int /* REFERENCES series(id) */
 );
 
 DROP TABLE IF EXISTS episodes;
@@ -40,8 +39,10 @@ CREATE TABLE episodes (
   name varchar(255) NOT NULL,
   number int NOT NULL, /* WHERE number > 0  */
   airDate date,
-  description text,
-  season varchar(255) NOT NULL
+  overview text,
+  season varchar(255) NOT NULL,
+  serie varchar(255) NOT NULL,
+  serieId int /*  REFERENCES series(id) */
 );
 
 DROP TABLE IF EXISTS users;
