@@ -1,5 +1,5 @@
 import express from "express";
-import { selectAll, selectAllWhereId, insertIntoSeasons, deleteWhereId, patchWhereId } from "./db.js";
+import { selectAll, selectAllWhereId, insertIntoSeasons, deleteWhereId} from "./db.js";
 
 export const router = express.Router();
 
@@ -47,7 +47,10 @@ router.delete("/:id", async(req,res) => {
     });
   }
 
+  
   const data = await deleteWhereId("seasons", myId);
-  res.json({ message: "delete successful" })
+  if (data) {
+    res.json({ message: "delete successful" })
+  }
 })
 

@@ -1,10 +1,8 @@
 import express from "express";
 import {
-  selectAll,
   selectAllWhereId,
   insertIntoEpisodes,
   deleteWhereId,
-  patchWhereId,
 } from "./db.js";
 
 export const router = express.Router();
@@ -47,5 +45,7 @@ router.delete("/:id", async(req,res) => {
     }
   
     const data = await deleteWhereId("episodes", myId);
+    if (data){
     res.json({ message: "delete successful" })
+    }
 })

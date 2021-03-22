@@ -16,11 +16,11 @@ dotenv.config();
 const {
     PORT: port = 3000,
     SESSION_SECRET: sessionSecret,
-} = process.env;
+} = process.env; //eslint-disable-line no-undef
 
 if (!sessionSecret) {
     console.error('Vantar gögn í env');
-    process.exit(1);
+    process.exit(1); //eslint-disable-line no-undef
   }
 
 const app = express();
