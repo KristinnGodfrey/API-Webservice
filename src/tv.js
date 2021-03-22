@@ -6,21 +6,18 @@ import {
   deleteWhereId,
   patchWhereId,
 } from "../src/db.js";
+import { ensureLoggedIn } from './login.js';
 
 export const router = express.Router();
 
 // tv GET
-router.get("/", async (req, res) => {
+router.get("/", ensureLoggedIn, async (req, res) => {
   const data = await selectAll("series");
   res.json({ data });
 });
 
-function requireAuth() {
-  return;
-}
-
 // tv POST
-router.post("/", async (req, res) => {
+router.post("/", /* ensureAdmin, */ async (req, res) => {
   //todo error handling, authentication
   const row = req.body.data[0];
   console.info("POST: inserting row to db");
@@ -30,7 +27,7 @@ router.post("/", async (req, res) => {
 });
 
 // tv/:id GET
-router.get("/:id", async (req, res) => {
+router.get("/:id", /* ensureAdmin, */ ensureLoggedIn, async (req, res) => {
   let seriesId = Number(req.params.id);
 
   if (!Number.isInteger(seriesId)) {
@@ -45,7 +42,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // tv:id PATCH
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", /* ensureAdmin, */  async (req, res) => {
   //todo authenticate
   let seriesId = Number(req.params.id);
   const row = req.body.data[0];
@@ -62,7 +59,7 @@ router.patch("/:id", async (req, res) => {
 });
 
 // tv:id DELETE
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", /* ensureAdmin, */ async (req, res) => {
   //todo authenticate
   let seriesId = Number(req.params.id);
 

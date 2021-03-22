@@ -1,9 +1,9 @@
 import express from 'express';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
-import passport, { ensureLoggedIn, ensureAdmin, getAccess } from './login.js';
+import { ensureLoggedIn, /*ensureAdmin,*/ getAccess } from './login.js';
 import { selectAllByUsername, registerDB, changeDB, selectAllUsers } from './db.js';
-import { findById, findByUsername, changeStatus } from './users.js';
+import { findById, changeStatus } from './users.js';
 
 export const router = express.Router();
 router.use(express.json());
@@ -100,7 +100,7 @@ async function selectUsers() {
 
 async function loginCheck(req, res, next) {
   const data = validationResult(await req);
-  if (data.errors = []) {
+  if (data.errors = []) { 
     return next()
   } else {
     console.log(data);

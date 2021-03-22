@@ -6,11 +6,11 @@ dotenv.config();
 const {
   DATABASE_URL: connectionString,
   NODE_ENV: nodeEnv = "development",
-} = process.env;
+} = process.env; //eslint-disable-line no-undef
 
 if (!connectionString) {
   console.error("Vantar DATABASE_URL");
-  process.exit(1);
+  process.exit(1); //eslint-disable-line no-undef
 }
 
 const ssl = nodeEnv !== "development" ? { rejectUnauthorized: false } : false;
@@ -19,14 +19,22 @@ const pool = new pg.Pool({ connectionString, ssl });
 export async function query(_query, values = []) {
   const client = await pool.connect();
   try {
+<<<<<<< HEAD
     const result = await client.query(_query, values);
+=======
+    result = await client.query(_query, values);
+>>>>>>> c30ede5e27e791bd3c0d5cc9aae910e4a9b98214
     return result;
   } catch (e) {
     console.log("villa í query");
     console.info("Error", e);
   } finally {
     client.release();
+<<<<<<< HEAD
   }
+=======
+  }  
+>>>>>>> c30ede5e27e791bd3c0d5cc9aae910e4a9b98214
 }
 
 export async function truncateTable(table) {
@@ -35,7 +43,7 @@ export async function truncateTable(table) {
   try {
     result = await query(q);
   } catch (e) {
-    console.info("Error: ", e);
+    console.info("Error: ", e.message);
   }
   return result.rows;
 }
@@ -59,7 +67,7 @@ export let selectAllUsers = async (table) => {
   try {
     result = await query(q);
   } catch (error) {
-    console.info("Error: ", e);
+    console.info("Error: ", e.message); //eslint-disable-line no-undef
   }
   return result.rows;
 };
@@ -81,7 +89,7 @@ export async function selectAllByUsername(username) {
   try {
     result = await query(q, [username]);
   } catch (error) {
-    console.info(e.message);
+    console.info("Error: ", e.message); //eslint-disable-line no-undef
   }
   return result.rows;
 }
