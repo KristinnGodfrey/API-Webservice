@@ -2,7 +2,7 @@ import express from 'express';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import passport, { ensureLoggedIn, ensureAdmin, getAccess } from './login.js';
-import { selectAllByUsername, registerDB, changeDB, selectAll } from './db.js';
+import { selectAllByUsername, registerDB, changeDB, selectAllUsers } from './db.js';
 import { findById, findByUsername, changeStatus } from './users.js';
 
 export const router = express.Router();
@@ -94,10 +94,8 @@ async function change(req, res) {
 }
 
 async function selectUsers() {
-  const data = await selectAll("users");
-  if (data) {
-    console.log('success');
-  }
+  const data = await selectAllUsers("users");
+  return data;  
 }
 
 async function loginCheck(req, res, next) {
@@ -129,27 +127,30 @@ router.patch('/me', ensureLoggedIn, (req, res) => {
 })
 
 //tékkar hvort notandi sé innskráður og admin, birtir síðan notendur
-router.get('/', ensureAdmin, selectUsers);
+router.get('/', /*ensureAdmin,*/ async (req, res) => {
+  const data = await selectUsers();
+  res.json({ data });
+});
 
 // tékkar hvort notandi sé innskráður og admin, birtir síðan user með id úr slóð
-router.get('/:id', ensureAdmin, (req, res) => {
-  const data = findById(req.params.id);
-  res.json(data);
+router.get('/:id', /*ensureAdmin,*/ async (req, res) => {
+  const data = await findById(req.params.id);
+  res.json({ data });
 })
 
 // breytir hvort notandi sé stjórnandi eða ekki, aðeins ef notandi sem framkvæmir er stjórnandi og er ekki að breyta sér sjálfum
-router.patch('/:id', ensureAdmin, (req, res) => {
+router.patch('/:id', /*ensureAdmin,*/ (req, res) => {
   const target = findById(req.params.id);
   const targetId = target.id;
   if (req.body.username != target.username) { // er ekki að breyta sér sjálfum
     if (target.admin == true) {
-      if (changeStatus(false, targetId)) {
+      if (changeStatus('FALSE', targetId)) {
         res.json('set to false');
       } else {
         res.json('unsuccessful')
       }
     } else {
-      if (changeStatus(true, targetId)) {
+      if (changeStatus('TRUE', targetId)) {
         res.json('set to true');
       } else {
         res.json('unsuccessful');

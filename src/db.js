@@ -52,6 +52,18 @@ export let selectAll = async (table) => {
   return result.rows;
 };
 
+export let selectAllUsers = async (table) => {
+  console.log(table);
+  const q = `SELECT id, email, admin, created, updated FROM ${table};`;
+  let result = "";
+  try {
+    result = await query(q);
+  } catch (error) {
+    console.info("Error: ", e);
+  }
+  return result.rows;
+};
+
 export async function selectAllWhereId(table, id) {
   const q = `SELECT * FROM ${table} WHERE id = $1;`;
   let result = "";

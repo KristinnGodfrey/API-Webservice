@@ -55,13 +55,12 @@ export function ensureLoggedIn(req, res, next) {
 }
 
 export function ensureAdmin(req, res, next) {
-  if ((getAccess(req, res) != false) && req.checkAdminById) {
-    return next();
-  } else if ((getAccess(req, res) != false) && checkAdminByUsername(req.username)) {
-    return next();
+  if (getAccess(req, res)) {
+    if (checkAdminByUsername(req.body.username)) {
+      return next();
+    }
   }
-
-  return res.redirect('/users/login');
+  res.json('not admin')
 }
 
 export default passport;
