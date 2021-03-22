@@ -2,7 +2,7 @@ import express from "express";
 import {
   selectAll,
   selectAllWhereId,
-  insertInto,
+  insertIntoEpisodes,
   deleteWhereId,
   patchWhereId,
 } from "./db.js";
@@ -10,12 +10,11 @@ import {
 export const router = express.Router();
 
 // episode POST
-router.post("/:id/episode", async (req, res) => {
+router.post("/", async (req, res) => {
   //todo error handling, authentication
   const row = req.body.data[0];
   console.info("POST: inserting row to db");
-  insertInto("episode", row);
-  console.info("finished inserting");
+  insertIntoEpisodes(row);
 
   res.json({ success: "success" });
 });
@@ -31,7 +30,7 @@ router.get("/:id", async (req, res) => {
     });
   }
 
-  const data = await selectAllWhereId("episode", myId);
+  const data = await selectAllWhereId("episodes", myId);
   res.json({ data });
 });
 
@@ -47,6 +46,6 @@ router.delete("/:id", async(req,res) => {
       });
     }
   
-    const data = await deleteWhereId("episode", myId);
+    const data = await deleteWhereId("episodes", myId);
     res.json({ message: "delete successful" })
 })

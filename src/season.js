@@ -1,11 +1,11 @@
 import express from "express";
-import { selectAll, selectAllWhereId, insertInto, deleteWhereId, patchWhereId } from "./db.js";
+import { selectAll, selectAllWhereId, insertIntoSeasons, deleteWhereId, patchWhereId } from "./db.js";
 
 export const router = express.Router();
 
 // season GET
 router.get("/", async (req, res) => {
-  const data = await selectAll("season");
+  const data = await selectAll("seasons");
   res.json({ data });
 });
 
@@ -13,9 +13,9 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   //todo error handling, authentication
   const row = req.body.data[0];
+  console.log(row);
   console.info("POST: inserting row to db");
-  insertInto('season', row); 
-  console.info("finished inserting");
+  insertIntoSeasons(row); 
 
   res.json({ success: "success" });
 });
@@ -31,7 +31,7 @@ router.get("/:id", async (req, res) => {
     });
   }
 
-  const data = await selectAllWhereId("season", myId);
+  const data = await selectAllWhereId("seasons", myId);
   res.json({ data });
 });
 
@@ -47,7 +47,7 @@ router.delete("/:id", async(req,res) => {
     });
   }
 
-  const data = await deleteWhereId("season", myId);
+  const data = await deleteWhereId("seasons", myId);
   res.json({ message: "delete successful" })
 })
 
