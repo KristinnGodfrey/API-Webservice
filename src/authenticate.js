@@ -101,7 +101,7 @@ async function selectUsers(res) {
 
 async function loginCheck(req, res, next) {
   const data = validationResult(await req);
-  if (data.errors == []) {
+  if (data.errors = []) { 
     return next()
   } else {
     console.log(data);

@@ -6,7 +6,7 @@ import {
   deleteWhereId,
   patchWhereId,
 } from "../src/db.js";
-import { ensureAdmin, ensureLoggedIn } from './login.js';
+import { ensureLoggedIn } from './login.js';
 
 export const router = express.Router();
 
