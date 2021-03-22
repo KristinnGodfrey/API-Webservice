@@ -1,0 +1,145 @@
+{
+	"info": {
+		"_postman_id": "2455dd4b-4e9e-46a8-ad3d-d6a0a28049eb",
+		"name": "Tv",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/tv",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/tv",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"tv"
+					]
+				},
+				"description": "Get /tv"
+			},
+			"response": []
+		},
+		{
+			"name": "/tv",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": [\n        {\n            \"name\": \"Posty poster Kiddi\",\n            \"airdate\": \"2017-09-25T00:00:00.000Z\",\n            \"inproduction\": true,\n            \"tagline\": \"His mind is a mystery, his methods are a miracle.\",\n            \"image\": \"6tfT03sGp9k4c0J3dypjrI8TSAI.jpg\",\n            \"description\": \"A young surgeon with Savant syndrome is recruited into the surgical unit of a prestigious hospital. The question will arise: can a person who doesn't have the ability to relate to people actually save their lives\",\n            \"language\": \"en\",\n            \"network\": \"ABC\",\n            \"webpage\": \"http://abc.go.com/shows/the-good-doctor\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/tv",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"tv"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/tv/:id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": [\n        {            \n            \"name\": \"Kiddi\",\n            \"description\": \"Awesome dude\"\n            \n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/tv/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"tv",
+						"1"
+					]
+				},
+				"description": "Patch tv/1"
+			},
+			"response": []
+		},
+		{
+			"name": "/tv/:id",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": [\n        {            \n            \"name\": \"Kiddi\",\n            \"description\": \"Awesome dude\"\n            \n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/tv/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"tv",
+						"1"
+					]
+				},
+				"description": "Patch tv/1"
+			},
+			"response": []
+		},
+		{
+			"name": "/tv/:id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": [\n        {            \n            \"name\": \"Kiddi\",\n            \"description\": \"Awesome dude\"\n            \n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/tv/5",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"tv",
+						"5"
+					]
+				},
+				"description": "Patch tv/1"
+			},
+			"response": []
+		}
+	]
+}
