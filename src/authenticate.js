@@ -100,6 +100,7 @@ async function selectUsers() {
 
 async function loginCheck(req, res, next) {
   const data = validationResult(await req);
+  //eslint-disable-line no-cond-assign
   if (data.errors = []) { 
     return next()
   } else {
