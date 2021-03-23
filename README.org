@@ -2,12 +2,21 @@
 
 ** Setup and run
 - ~npm run setup~
+- ~npm run insert~
 - ~npm run dev~
+
+** eslint
+- ~npm run test~
+
+** login info
+**** localhost:3000/users/login
+
+- "username": "admin"
+- "password": "123"
 
 ** Postman request collections
 
 - [[./postman/Tv.postman_collection.json][tv router]]
 - [[./postman/Season.postman_collection.json][season router]]
 - [[./postman/Episode.postman_collection.json][episode router]]
-
 

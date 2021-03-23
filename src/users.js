@@ -29,7 +29,7 @@ export async function findByUsername(username) {
 }
 
 export async function findById(id) {
-  const q = `SELECT * FROM users WHERE id = $1`;
+  const q = `SELECT id, email, admin, created, updated FROM users WHERE id = $1`;
 
   try {
     const result = await query(q, [id]);
