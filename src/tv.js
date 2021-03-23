@@ -71,5 +71,7 @@ router.delete("/:id", /* ensureAdmin, */ async (req, res) => {
   }
 
   const data = await deleteWhereId("series", seriesId);
+  if (data) {
   res.json({ message: "delete successful" });
+  }
 });

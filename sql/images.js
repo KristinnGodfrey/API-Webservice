@@ -48,12 +48,12 @@ export async function uploadImageIfNotUploaded(imagePath) {
   const alreadyUploaded = await getImageIfUploaded(imagePath);
 
   if (alreadyUploaded) {
-    debug(`Mynd ${imagePath} þegar uploadað`);
+    debug(`Mynd ${imagePath} þegar uploadað`); // eslint-disable-line
     return alreadyUploaded.secure_url;
   }
 
   const uploaded = await uploadAsync(imagePath);
-  debug(`Mynd ${imagePath} uploadað`);
+  debug(`Mynd ${imagePath} uploadað`); // eslint-disable-line
 
   return uploaded.secure_url;
 }
@@ -65,7 +65,7 @@ export async function uploadImagesFromDisk(imageDir) {
     (i) => path.extname(i).toLowerCase() === ".jpg"
   );
 
-  debug(`Bæti við ${filteredImages.length} myndum`);
+  debug(`Bæti við ${filteredImages.length} myndum`); // eslint-disable-line
 
   const images = [];
 
@@ -77,7 +77,7 @@ export async function uploadImagesFromDisk(imageDir) {
     images.push(uploaded);
   }
 
-  debug("Búið að senda myndir á Cloudinary");
+  debug("Búið að senda myndir á Cloudinary"); // eslint-disable-line
 
   return images;
 }

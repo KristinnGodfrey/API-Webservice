@@ -2,8 +2,7 @@ import dotenv from "dotenv";
 import csv from "csv-parser";
 import fs from "fs";
 import { truncateTable, query, end } from "../src/db.js";
-import { v2 } from 'cloudinary';
-import * as cImgs from "../src/images.js";
+
 
 dotenv.config();
 
@@ -201,6 +200,6 @@ async function main() {
   await end();
 }
 
-await main().catch((err) => {
+main().catch((err) => {
   console.error("Error inserting", err);
 });
