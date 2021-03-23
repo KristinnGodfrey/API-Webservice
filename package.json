@@ -7,7 +7,7 @@
     "test": "concurrently \"npx eslint ./src/**.js\" \"npx eslint ./sql/**.js\" ",
     "setup": "node ./src/setup.js",
     "insert": "node ./sql/insert_from_csv.js",
-    "start": "concurrently \"node ./src/setup.js\" \"node ./src/app.js\" ",
+    "start": "concurrently  \"node ./src/setup.js\"    \"node ./sql/insert_from_csv.js\"     \"node ./src/app.js\" ",
     "dev": "nodemon ./src/app.js"
   },
   "repository": {

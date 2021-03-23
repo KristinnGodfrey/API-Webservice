@@ -4,14 +4,14 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
-import { comparePasswords, findByUsername, findById, checkAdminById, checkAdminByUsername } from './users.js';
+import { findById, checkAdminByUsername } from './users.js';
 
 dotenv.config();
 
 const {
   JWT_SECRET: jwtSecret,
-  TOKEN_LIFETIE: tokenLifetime = 3600,
-} = process.env;
+  TOKEN_LIFETIE: tokenLifetime = 3600, //eslint-disable-line no-unused-vars
+} = process.env; //eslint-disable-line no-undef
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -30,17 +30,17 @@ function stratToken(data, next) {
   } catch(e) {
     console.info(e.message);
   }
-};
+}
 
 passport.use(
   new Strategy(jwtOptions, stratToken),
 );
 
 //helper til að fá token
-export function getAccess(req, res){
+export function getAccess(req){
   const username = {name: req.body.username};
 
-  const accessToken = jwt.sign(username, process.env.JWT_SECRET);
+  const accessToken = jwt.sign(username, process.env.JWT_SECRET); //eslint-disable-line no-undef
   return accessToken;
 }
 

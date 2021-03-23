@@ -4,7 +4,7 @@ import {
   insertIntoEpisodes,
   deleteWhereId,
 } from "./db.js";
-import { ensureAdmin, ensureLoggedIn } from "./login.js";
+import { /*ensureAdmin,*/ ensureLoggedIn } from "./login.js";
 
 export const router = express.Router();
 

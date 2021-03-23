@@ -47,7 +47,7 @@ export let selectAll = async (table) => {
   try {
     result = await query(q);
   } catch (error) {
-    console.info("Error: ", e);
+    console.info("Error: ", e.message); //eslint-disable-line no-undef
   }
   return result.rows;
 };

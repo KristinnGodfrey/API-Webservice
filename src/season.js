@@ -1,5 +1,5 @@
 import express from "express";
-import { selectAll, selectAllWhereId, insertIntoSeasons, deleteWhereId, patchWhereId } from "./db.js";
+import { selectAll, selectAllWhereId, insertIntoSeasons, deleteWhereId } from "./db.js";
 import { ensureLoggedIn } from './login.js';
 
 export const router = express.Router();
