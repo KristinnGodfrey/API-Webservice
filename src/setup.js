@@ -5,8 +5,7 @@ const schemaFile = './sql/schema.sql';
 
 async function main() {
   const data = await promises.readFile(schemaFile);
-
-  await query(data);
+  await query(data.toString('utf-8'));
 
   await end();
 }
@@ -14,5 +13,3 @@ async function main() {
 main().catch((err) => {
     console.error(err);
 });
-  
-

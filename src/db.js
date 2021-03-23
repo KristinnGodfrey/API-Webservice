@@ -19,22 +19,14 @@ const pool = new pg.Pool({ connectionString, ssl });
 export async function query(_query, values = []) {
   const client = await pool.connect();
   try {
-<<<<<<< HEAD
     const result = await client.query(_query, values);
-=======
-    result = await client.query(_query, values);
->>>>>>> c30ede5e27e791bd3c0d5cc9aae910e4a9b98214
     return result;
   } catch (e) {
     console.log("villa í query");
     console.info("Error", e);
   } finally {
     client.release();
-<<<<<<< HEAD
-  }
-=======
   }  
->>>>>>> c30ede5e27e791bd3c0d5cc9aae910e4a9b98214
 }
 
 export async function truncateTable(table) {
