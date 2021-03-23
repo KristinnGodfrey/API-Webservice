@@ -1,9 +1,7 @@
 * API Webservice
 
 ** Setup and run
-- ~npm run setup~
-- ~npm run insert~
-- ~npm run dev~
+- ~npm run start~
 
 ** eslint
 - ~npm run test~
