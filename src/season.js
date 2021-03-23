@@ -1,17 +1,17 @@
 import express from "express";
-import { selectAll, selectAllWhereId, insertIntoSeasons, deleteWhereId} from "./db.js";
+import { selectAll, selectAllWhereId, insertIntoSeasons, deleteWhereId, patchWhereId } from "./db.js";
+import { ensureLoggedIn } from './login.js';
 
 export const router = express.Router();
 
 // season GET
-router.get("/", async (req, res) => {
+router.get("/", ensureLoggedIn, async (req, res) => {
   const data = await selectAll("seasons");
   res.json({ data });
 });
 
 // season POST
-router.post("/", async (req, res) => {
-  //todo error handling, authentication
+router.post("/", /* ensureAdmin, */ async (req, res) => {
   const row = req.body.data[0];
   console.log(row);
   console.info("POST: inserting row to db");
@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
 });
 
 // season/:id GET
-router.get("/:id", async (req, res) => {
+router.get("/:id", ensureLoggedIn, async (req, res) => {
   let myId = Number(req.params.id);
 
   if (!Number.isInteger(myId)) {
@@ -36,8 +36,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // season:id DELETE
-router.delete("/:id", async(req,res) => {
-  //todo authenticate
+router.delete("/:id", /* ensureAdmin, */  async(req,res) => {
   let myId = Number(req.params.id);
 
   if (!Number.isInteger(myId)) {

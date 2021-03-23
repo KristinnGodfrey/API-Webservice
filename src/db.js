@@ -21,13 +21,13 @@ export async function query(_query, values = []) {
   let result = "";
   try {
     result = await client.query(_query, values);
+    return result;
   } catch (e) {
     console.log("villa í query");
     console.info("Error", e);
   } finally {
     client.release();
-  }
-  return result;
+  }  
 }
 
 export async function truncateTable(table) {
